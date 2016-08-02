@@ -1,22 +1,13 @@
 import React from 'react';
-import axios from 'axios';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import CircularProgress from 'material-ui/CircularProgress';
-
+import getUserInfo from './gitSearch';
 
 class App extends React.Component {
   getChildContext() {
      return {muiTheme: getMuiTheme()};
    }
-  getUserInfo(username){
-    return axios.get(`https://api.github.com/users/myflwq`)
-    .then((res)=>(
-        {
-          gitInfo: res.data
-        }
-      )
-    )
-  }
+
   constructor(){
     super();
     this.state={
@@ -25,22 +16,21 @@ class App extends React.Component {
     }
   }
   componentDidMount(){
-    this.getUserInfo().then((x)=>{
-      console.log(x.gitInfo);
+    getUserInfo().then((x) => {
+      // console.log(data.gitInfo);
       this.setState({
         info:x.gitInfo,
         wait:false
       })
-    })
+    });
   }
   render () {
+    let x = <CircularProgress size={1.5} />;
+    let y = <div><img src={this.state.info.avatar_url} /></div>;
     return(
       <div>
         {
-          this.state.wait ? <CircularProgress size={1.5} /> :
-          <div>
-            <img src={this.state.info.avatar_url} />
-          </div>
+          this.state.wait ? x : y
         }
       </div>
 
